@@ -9,14 +9,14 @@ public class Resevation {
 
     private Integer roomNumber;
     private Date checkIn;
-    private Date chekOut;
+    private Date checkOut;
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public Resevation(Integer roomNumber, Date checkIn, Date chekOut) {
         this.roomNumber = roomNumber;
         this.checkIn = checkIn;
-        this.chekOut = chekOut;
+        this.checkOut = chekOut;
     }
 
     public Integer getRoomNumber() {
@@ -33,17 +33,27 @@ public class Resevation {
 
 
     public Date getChekOut() {
-        return chekOut;
+        return checkOut;
     }
 
     public long duration() {
-        long diff = chekOut.getTime() - checkIn.getTime();
+        long diff = checkOut.getTime() - checkIn.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
-    public void updateDater(Date checkIn, Date chekOut) {
+    public String updateDates(Date checkIn, Date checkOut) {
+
+        Date now = new Date();
+        if (checkIn.before(now) || checkOut.before(now)) {
+            return "Reservation dates for updates must be future dates";
+        }
+        if (!checkOut.after(checkIn)){
+            return "Check-out date must be after check-in date";
+        }
+
         this.checkIn = checkIn;
-        this.chekOut = chekOut;
+        this.checkOut = checkOut;
+        return null;
     }
 
     @Override
@@ -53,7 +63,7 @@ public class Resevation {
                 + ", check-in: "
                 + sdf.format(checkIn)
                 + ", check-out: "
-                +sdf.format(chekOut)
+                +sdf.format(checkOut)
                 + ", "
                 + duration()
                 + " nights";
